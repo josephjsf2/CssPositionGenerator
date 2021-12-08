@@ -18,21 +18,23 @@
       <div class="content">
         <textarea class="textarea" id="w3review" name="w3review" rows="4" cols="50" v-model="outputCss" disabled ref="textarea">
         </textarea>
-        <button @click="copy()" class="copy-btn"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30">
-  <g id="グループ_9" data-name="グループ 9" transform="translate(-708 -281)">
-    <g id="グループ_8" data-name="グループ 8">
-      <g id="長方形_22" data-name="長方形 22" transform="translate(712 281)" fill="#707070" stroke="#707070" stroke-width="1">
-        <rect width="18" height="25" rx="7" stroke="none"/>
-        <rect x="0.5" y="0.5" width="17" height="24" rx="6.5" fill="none"/>
-      </g>
-      <g id="長方形_21" data-name="長方形 21" transform="translate(708 286)" fill="#fff" stroke="#707070" stroke-width="1">
-        <rect width="18" height="25" rx="7" stroke="none"/>
-        <rect x="0.5" y="0.5" width="17" height="24" rx="6.5" fill="none"/>
-      </g>
-    </g>
-    <text id="A" transform="translate(710 305)" fill="#707070" font-size="20" font-family="UDDigiKyokashoNP-R, UD Digi Kyokasho NP-R"><tspan x="0" y="0">A</tspan></text>
-  </g>
-</svg></button>
+        <button @click="copy()" class="copy-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30">
+            <g id="グループ_9" data-name="グループ 9" transform="translate(-708 -281)">
+              <g id="グループ_8" data-name="グループ 8">
+                <g id="長方形_22" data-name="長方形 22" transform="translate(712 281)" fill="#707070" stroke="#707070" stroke-width="1">
+                  <rect width="18" height="25" rx="7" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="17" height="24" rx="6.5" fill="none"/>
+                </g>
+                <g id="長方形_21" data-name="長方形 21" transform="translate(708 286)" fill="#fff" stroke="#707070" stroke-width="1">
+                  <rect width="18" height="25" rx="7" stroke="none"/>
+                  <rect x="0.5" y="0.5" width="17" height="24" rx="6.5" fill="none"/>
+                </g>
+              </g>
+              <text id="A" transform="translate(710 305)" fill="#707070" font-size="20" font-family="UDDigiKyokashoNP-R, UD Digi Kyokasho NP-R"><tspan x="0" y="0">A</tspan></text>
+            </g>
+          </svg>
+        </button>
       </div>
     </template>
   </base-modal>

@@ -15,7 +15,7 @@ export default {
   components: {
     ElementItem
   },
-  inject: [ 'elements' ]
+  inject: [ 'elements' ],
 }
 </script>
 

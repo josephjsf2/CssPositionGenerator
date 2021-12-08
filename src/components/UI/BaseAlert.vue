@@ -1,15 +1,23 @@
 <template>
-  <dialog class="dialog" open>
+  <dialog class="dialog" :class="{'danger': danger}" open>
     <slot></slot>
   </dialog>
 </template>
+
+<script>
+export default {
+  props: {
+    danger: {type: Boolean, default: false}
+  }
+}
+</script>
 
 <style scoped>
   .dialog {
     display: block;
     width: 50%;
     min-height: 50px;
-    background: rgb(94 200 161);
+    background: rgba(94, 200, 161, 0.829);
     color: #fff;
     border: none;
     padding: 1rem;
@@ -22,6 +30,9 @@
     z-index: 2;
     animation: fadeout 2s ease-out;
     animation-iteration-count: 1;
+  }
+  .dialog.danger {
+    background: rgba(202, 30, 64, 0.829);
   }
 
   @keyframes fadeout {

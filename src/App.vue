@@ -2,7 +2,7 @@
   <the-leftbar></the-leftbar>
   <the-main :bg-url="bgUrl" :size="bgSize"></the-main>
 
-  <base-alert v-if="hasAlert"><p>{{ alertText }}</p></base-alert>
+  <base-alert :danger="alertDanger" v-if="hasAlert"><p>{{ alertText }}</p></base-alert>
 </template>
 
 <script>
@@ -18,7 +18,8 @@ export default {
       selectedElem: {},
       alertText: '',
       hasAlert: false,
-      alertTimeout: null
+      alertTimeout: null,
+      alertDanger: false
     }
   },
   components: {
@@ -33,10 +34,16 @@ export default {
       this.bgSize = {w, h};
     },
     addElement(elem) {
+      if (this.elements.find(el => el.class === elem.class)) {
+        this.showAlert('Duplicated class name is not allow!', true)
+        return;
+      }
       this.elements.push(elem);
     },
     removeElement(id) {
-      this.elements = this.elements.filter(elem => elem.id === id);
+      const element = this.elements.find(elem => elem.id === id);
+      const index = this.elements.indexOf(element);
+      this.elements.splice(index, 1);
     },
     toggleSelect(id) {
       if (this.selectedElem && this.selectedElem.id !== id) {
@@ -50,12 +57,13 @@ export default {
     },
     setPosition(position, id) {
       this.elements.find(elem => elem.id === id).position = position;
-      console.log(this.elements)
     },
     setRotation(rotation, id) {
       this.elements.find(elem => elem.id === id).rotation = rotation;
     },
-    showAlert(text) {
+    showAlert(text, isDanger) {
+      this.alertDanger = isDanger? true: false;
+
       this.alertText = text;
       this.hasAlert = true;
       if (this.alertTimeout) {
@@ -64,6 +72,13 @@ export default {
       this.alertTimeout = setTimeout(() => {
         this.hasAlert = false;
       }, 1000)
+    },
+    updateElement(oldId, data) {
+      const element = this.elements.find(elem => elem.id === oldId);
+      element.size = data.size;
+      element.class = data.class;
+      element.bgColor = data.bgColor;
+      element.borderRadius = data.borderRadius;
     }
   },
   provide() {
@@ -72,10 +87,12 @@ export default {
       setBgSize: this.setBgSize,
       elements: this.elements,
       addElement: this.addElement,
+      removeElement: this.removeElement,
       toggleSelect: this.toggleSelect,
       setPosition: this.setPosition,
       setRotation: this.setRotation,
-      showAlert: this.showAlert
+      showAlert: this.showAlert,
+      updateElement: this.updateElement
     }
   }
 }

@@ -52,11 +52,13 @@ export default {
     },
     add() {
       if (!this.cssClass) {
-        alert('A css class must be given to the new element!')
+        this.showAlert('A css class must be given to the new element!', 'danger');
+        return;
       }
 
       if(!this.width || !this.height) {
-        alert('A size must be given to the new element!');
+        this.showAlert('A size must be given to the new element!', 'danger');
+        return;
       }
 
       if (!this.bgColor) {
@@ -77,7 +79,7 @@ export default {
       this.addElement(newElem);
     }
   },
-  inject: [ 'addElement' ]  // element array
+  inject: [ 'addElement', 'showAlert' ]  // element array
 }
 </script>
 

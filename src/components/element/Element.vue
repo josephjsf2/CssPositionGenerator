@@ -15,10 +15,7 @@ export default {
       styles: {},
       position: {left: 30, top: 30},
       rotation: {deg: 0},
-      rotate: 1, //rotate step
-      move: 1,  // move step
       sendDataTimeout: null,
-      alt: false, //is pressing alt
     }
   },
   computed: {
@@ -39,81 +36,63 @@ export default {
   watch: {
     select(val) {
       if (val) {
-        // start controlling this element
-        document.addEventListener('keydown', this.handleShiftDown);
-        document.addEventListener('keyup', this.handleShiftUp);
-        document.addEventListener('keydown', this.handleAltDown);
-        document.addEventListener('keyup', this.handleAltUp);
         document.addEventListener('keydown', this.handleArrowKeys);
+        document.addEventListener('mousedown', this.handlemouseDown);
 
       } else {
         // stop controlling this element
-        document.removeEventListener('keydown', this.handleShiftDown);
-        document.removeEventListener('keydown', this.handleShiftUp);
-        document.addEventListener('keydown', this.handleAltDown);
-        document.addEventListener('keyup', this.handleAltUp);
-        document.removeEventListener('keydown', this.handleArrowKeys);
+        this.removeAllEventListener();
       }
     }
+  },
+  unmounted() {
+    this.removeAllEventListener();
   },
   methods: {
     toggle() {
       this.toggleSelect(this.element.id)
     },
-    startControl() {
-
+    removeAllEventListener() {
+      document.removeEventListener('keydown', this.handleArrowKeys);
     },
-    handleShiftDown(event) {
-      if (event.key === 'Shift') {
-        this.move = 10;
-        this.rotate = 10;
-      }
-    },
-    handleShiftUp(event) {
-      if (event.key === 'Shift') {
-        this.move = 1;
-        this.rotate = 1;
-      }
-    },
-    handleAltDown(event) {
-      if (event.key === 'Alt') {
-        this.alt = true;
-      }
-    },
-    handleAltUp(event) {
-      if (event.key === 'Alt') {
-        this.alt = false;
+    handlemouseDown(event) {
+      if (event.button === 0) {
+        this.toggleSelect(this.element.id);
+        document.removeEventListener('mousedown', this.handlemouseDown);
       }
     },
     handleArrowKeys(event) {
+      console.log(event)
       event.preventDefault();
-      if (this.alt){
+      if (event.altKey){
+        const rotate = event.shiftKey? 10: 1;
         switch(event.key) {
           case 'ArrowRight': {
-            this.rotation.deg += this.rotate;
+            this.rotation.deg += rotate;
             break;
           }
           case 'ArrowLeft': {
-            this.rotation.deg -= this.rotate;
+            this.rotation.deg -= rotate;
             break;
           }
         }
       } else {
+        const move = event.shiftKey? 10: 1;
         switch(event.key) {
           case 'ArrowDown': {
-            this.position.top += this.move;
+            this.position.top += move;
             break;
           }
           case 'ArrowUp': {
-            this.position.top -= this.move;
+            this.position.top -= move;
             break;
           }
           case 'ArrowRight': {
-            this.position.left += this.move;
+            this.position.left += move;
             break;
           }
           case 'ArrowLeft': {
-            this.position.left -= this.move;
+            this.position.left -= move;
             break;
           }
         }
