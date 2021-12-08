@@ -82,21 +82,15 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: 'TaipeiSansTCBeta';
-  src: url('./assets/fonts/TaipeiSansTCBeta-Regular.ttf') format("ttf"),
-    url('./assets/fonts/TaipeiSansTCBeta-Regular.woff') format("woff")
-}
-@font-face {
-  font-family: 'NotoSansTC';
-  src: url('./assets/fonts/NotoSansTC-Regular.ttf') format("ttf"),
-    url('./assets/fonts/NotoSansTC-Regular.woff') format("woff")
-}
 
 #app {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'NotoSansTC', 'TaipeiSansTCBeta';
+  font-family: 'Roboto', sans-serif, Arial;
+}
+button, input, label {
+  font-family: 'Roboto', sans-serif, Arial;
+  font-weight: bold;
 }
 </style>

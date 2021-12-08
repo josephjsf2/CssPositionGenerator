@@ -40,7 +40,8 @@ export default {
       srcType: null,
       width: null,
       height: null,
-      uploadedUrl: null
+      uploadedUrl: null,
+      inputUrl: null
     }
   },
   methods: {
@@ -50,6 +51,10 @@ export default {
       this.uploadUrl(this.uploadedUrl);
     },
     setSize() {
+      if (this.srcType === 'url') {
+        console.log(this.srcType)
+        this.uploadUrl(this.inputUrl);
+      }
       console.log(this.width, this.height)
       this.setBgSize(this.width, this.height);
     }
@@ -77,11 +82,12 @@ export default {
     display: inline-block;
     padding: 0.1rem 0.5rem;
     height: 2rem;
+    line-height: 1.7rem;
+    vertical-align: middle;
     border-radius: 1rem;
     border: 2px solid #707070;
     color: #707070;
     font-size: 1rem;
-    flex-basis: 90px;
     text-align: center;
     margin: 0.5rem 0;
     margin-right: 0.5rem;
