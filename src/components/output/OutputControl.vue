@@ -49,8 +49,8 @@ export default {
       cssTemplage: 
 `
 .$className$ { 
-  top: $top$; 
-  left: $left$; 
+  top: $top$px; 
+  left: $left$px; 
   transform: rotate($deg$deg);
 }
 `,
