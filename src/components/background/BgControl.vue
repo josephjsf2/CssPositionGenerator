@@ -92,5 +92,6 @@ export default {
     margin: 0.5rem 0;
     margin-right: 0.5rem;
     cursor: pointer;
+    flex-basis: 110px;
   }
 </style>
