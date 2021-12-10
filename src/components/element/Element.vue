@@ -1,5 +1,5 @@
 <template>
-  <div @click="toggle()" class="elem" :class="{'selected': element.select}" :style="computedStyles">
+  <div @click="toggle()" class="elem" :class="{'selected': element.select}" :style="computedStyles" ref="elemRef">
     <span class="class-name" :title="element.class">{{ element.class }}</span>
   </div>
 </template>
@@ -13,9 +13,10 @@ export default {
   data() {
     return {
       styles: {},
-      position: {left: 30, top: 30},
-      rotation: {deg: 0},
+      position: this.element.position,
+      rotation: this.element.rotation,
       sendDataTimeout: null,
+      tempCopy: null
     }
   },
   computed: {
@@ -37,8 +38,8 @@ export default {
     select(val) {
       if (val) {
         document.addEventListener('keydown', this.handleArrowKeys);
-        document.addEventListener('mousedown', this.handlemouseDown);
-
+        document.addEventListener('keydown', this.handleDeleteKeys);
+        document.addEventListener('keydown', this.handleDuplicateElem)
       } else {
         // stop controlling this element
         this.removeAllEventListener();
@@ -54,16 +55,19 @@ export default {
     },
     removeAllEventListener() {
       document.removeEventListener('keydown', this.handleArrowKeys);
+      document.removeEventListener('keydown', this.handleDeleteKeys);
+      document.removeEventListener('keydown', this.handleDuplicateElem)
     },
-    handlemouseDown(event) {
-      if (event.button === 0) {
-        this.toggleSelect(this.element.id);
-        document.removeEventListener('mousedown', this.handlemouseDown);
+    handleDeleteKeys(event) {
+      if (event.key === 'Delete') {
+        event.preventDefault();
+        this.removeElement(this.element.id)
       }
     },
     handleArrowKeys(event) {
-      console.log(event)
-      event.preventDefault();
+      if (['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(event.key)){
+        event.preventDefault();
+      }
       if (event.altKey){
         const rotate = event.shiftKey? 10: 1;
         switch(event.key) {
@@ -105,9 +109,29 @@ export default {
         this.setPosition(this.position, this.element.id);
         this.setRotation(this.rotation, this.element.id)
       }, 3000)
+    },
+    handleDuplicateElem(event) {
+      if (event.ctrlKey && event.key === 'c') {
+        this.tempCopy = {...this.element};
+      }
+      if (event.ctrlKey && event.key === 'v' && this.tempCopy) {
+        // give new id
+        this.tempCopy.id = Math.floor(Math.random() * 1000000);
+
+        // copy position and rotation as well
+        this.tempCopy.position = {...this.position};
+        this.tempCopy.rotation = {...this.rotation};
+        
+        this.addElement(this.tempCopy);
+
+        // cancel current selection and select onto the new element
+        this.toggleSelect(this.element.id)
+        this.tempCopy.select = false;
+
+      }
     }
   },
-  inject: [ 'toggleSelect', 'setPosition', 'setRotation' ]
+  inject: [ 'toggleSelect', 'setPosition', 'setRotation', 'addElement', 'removeElement' ]
 
 }
 </script>

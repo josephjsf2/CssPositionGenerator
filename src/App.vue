@@ -34,10 +34,12 @@ export default {
       this.bgSize = {w, h};
     },
     addElement(elem) {
-      if (this.elements.find(el => el.class === elem.class)) {
-        this.showAlert('Duplicated class name is not allow!', true)
-        return;
+      let num = 0;
+      while(this.elements.find(el => el.class === elem.class)) {
+        num = num + 1;
+        elem.class = num === 1 ? elem.class + `(${num})`: elem.class.replace(/(?<=[(])\d(?=[)])/, num);
       }
+
       this.elements.push(elem);
     },
     removeElement(id) {

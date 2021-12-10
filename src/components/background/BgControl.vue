@@ -52,10 +52,8 @@ export default {
     },
     setSize() {
       if (this.srcType === 'url') {
-        console.log(this.srcType)
         this.uploadUrl(this.inputUrl);
       }
-      console.log(this.width, this.height)
       this.setBgSize(this.width, this.height);
     }
     

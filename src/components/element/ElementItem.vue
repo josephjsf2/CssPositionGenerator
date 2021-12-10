@@ -1,6 +1,6 @@
 <template>
   <li class="elem-item">
-    <button class="toggle-btn" :class="{'selected': element.select}" @click="toggle()">{{ element.class }}</button>
+    <button class="toggle-btn" :class="{'selected': element.select}" @click="toggle()"><input class="elem-title" v-model="data.class" @blur="saveChange()"></button>
     <div class="action-btns">
       <button @click="openModal()" class="edit-btn">Edit</button>
       <button @click="removeElement(element.id)" class="delete-btn">Delete</button>
@@ -45,7 +45,10 @@ export default {
   props: [ 'element' ],
   data() {
     return {
-      data: {},
+      data: {
+        ...this.element,
+        size: {...this.element}
+      },
       isSelected: false,
       hasModal: false
     }
@@ -58,8 +61,6 @@ export default {
       this.toggleSelect(this.element.id)
     },
     openModal() {
-      this.data = { ...this.element };
-      console.log(this.data)
       this.hasModal = true;
     },
     hideModal() {
@@ -89,6 +90,17 @@ export default {
     background: #fff;
     border-radius: 5px;
     display: flex;
+  }
+  .elem-item .elem-title {
+    border: none;
+    outline: none;
+    max-width: 120px;
+  }
+  .elem-item .elem-item .elem-title:hover {
+    border-bottom: 2px solid darkslategray;
+  }
+  .elem-item .toggle-btn.selected .elem-title {
+    color: #5EC8A1;
   }
   .elem-item button {
     cursor: pointer;
