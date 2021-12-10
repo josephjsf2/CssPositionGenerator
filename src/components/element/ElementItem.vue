@@ -47,7 +47,9 @@ export default {
     return {
       data: {
         ...this.element,
-        size: {...this.element}
+        size: {...this.element.size},
+        position: {...this.element.position},
+        rotation: {...this.element.rotation},
       },
       isSelected: false,
       hasModal: false
@@ -68,18 +70,20 @@ export default {
     },
     saveChange() {
       if (!this.data.size.w || !this.data.size.h) {
-        alert('A size must be givent to the element!')
+        const errorMsg = 'A size must be givent to the element!';
+        this.showAlert(errorMsg, true);
       }
 
       if (!this.data.class.trim()) {
-        alert('A class name must be givent to the element!')
+        const errorMsg = 'A class name must be givent to the element!';
+        this.showAlert(errorMsg, true);
       }
 
       this.updateElement(this.element.id, this.data);
       this.hideModal();
     }
   },
-  inject: [ 'toggleSelect', 'updateElement', 'removeElement' ]
+  inject: [ 'toggleSelect', 'updateElement', 'removeElement', 'showAlert' ]
 }
 </script>
 

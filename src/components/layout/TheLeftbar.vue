@@ -168,6 +168,7 @@ export default {
   .title {
     font-size: 1.5rem;
     text-shadow: 0 3px 3px rgba(0,0,0,0.1);
+    align-self: flex-start;
   }
   .container .control-card {
     width: 100%;
