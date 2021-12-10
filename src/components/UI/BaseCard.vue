@@ -52,6 +52,7 @@
   }
   .content {
     height: 100%;
+    position: relative;
   }
   .collapse-btn {
     position: absolute;

@@ -107,6 +107,7 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif, Arial;
+  display: flex;
 }
 button, input, label {
   font-family: 'Roboto', sans-serif, Arial;
