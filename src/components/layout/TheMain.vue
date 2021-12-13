@@ -3,7 +3,7 @@
     <base-card>
       <template #content>  
         <div v-if="!!bgUrl" class="bg-img">
-          <img :width="size.w" :height="size.h" class="img" :src="bgUrl">
+          <img @click="blurElements()" :width="size.w" :height="size.h" class="img" :src="bgUrl" ref="bgRef">
           <Element v-for="elem in elements" :key="elem.id" :element="elem" :select="elem.select" />
         </div>
       </template>
@@ -38,12 +38,23 @@ export default {
       hasDescrp: true
     }
   },
+  created() {
+    document.addEventListener('mousedown', this.handleMouseDown)
+  },
   methods: {
     close() {
       this.hasDescrp = false;
+    },
+    handleMouseDown(event) {
+      if(event.target === this.$refs.bgRef) {
+        this.deselectAll();
+      }
+    },
+    blurElements() {
+      
     }
   },
-  inject: [ 'elements' ]
+  inject: [ 'elements', 'deselectAll' ]
 
 }
 

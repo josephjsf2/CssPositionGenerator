@@ -48,14 +48,17 @@ export default {
       this.elements.splice(index, 1);
     },
     toggleSelect(id) {
-      if (this.selectedElem && this.selectedElem.id !== id) {
-        this.selectedElem.select = false;
-      }
+      // if (this.selectedElem && this.selectedElem.id !== id) {
+      //   this.selectedElem.select = false;
+      // }
       const elem = this.elements.find(elem => elem.id === id);
       elem.select = !elem.select;
-      if (elem.select) {
-        this.selectedElem = elem;
-      }
+      // if (elem.select) {
+      //   this.selectedElem = elem;
+      // }
+    },
+    deselectAll() {
+      this.elements.forEach(elem => elem.select = false);
     },
     setPosition(position, id) {
       this.elements.find(elem => elem.id === id).position = position;
@@ -91,6 +94,7 @@ export default {
       addElement: this.addElement,
       removeElement: this.removeElement,
       toggleSelect: this.toggleSelect,
+      deselectAll: this.deselectAll,
       setPosition: this.setPosition,
       setRotation: this.setRotation,
       showAlert: this.showAlert,
