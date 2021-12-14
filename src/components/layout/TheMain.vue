@@ -3,8 +3,9 @@
     <base-card>
       <template #content>  
         <div v-if="!!bgUrl" class="bg-img">
-          <img @click="blurElements()" :width="size.w" :height="size.h" class="img" :src="bgUrl" ref="bgRef">
+          <img :width="size.w" :height="size.h" class="img" :src="bgUrl" ref="bgRef">
           <Element v-for="elem in elements" :key="elem.id" :element="elem" :select="elem.select" />
+          <div class="marquee-rec" :style="marqueeStyle" ref="marqueeRef"></div>
         </div>
       </template>
     
@@ -35,26 +36,122 @@ export default {
   props: [ 'bg-url', 'size' ],
   data() {
     return {
-      hasDescrp: true
+      hasDescrp: true,
+      marqueeParams: {left: 0, top: 0, width: 0, height: 0},
+      startCoordinates: {x: 0, y: 0},
+      currentCoordinates: {x: 0, y: 0}
     }
   },
   created() {
-    document.addEventListener('mousedown', this.handleMouseDown)
+    document.addEventListener('mousedown', this.handlerBlurSelections);
+    document.addEventListener('mousedown', this.handleMarqueeSelection);
+    
+  },
+  computed: {
+    marqueeStyle() {
+
+      const x = this.marqueeParams.left;
+      const y = this.marqueeParams.top;
+      const w = this.marqueeParams.width;
+      const h = this.marqueeParams.height;
+      
+      const result =  {
+        left: Number.isInteger(x)? x + 'px': x,
+        top: Number.isInteger(y)? y + 'px': y,
+        width: Math.abs(w) + 'px',
+        height: Math.abs(h) + 'px',
+        display: (x === 0 && y === 0) || (w === 0 && h === 0) ? 'none': 'block'
+      }
+      return result;
+    }
   },
   methods: {
     close() {
       this.hasDescrp = false;
     },
-    handleMouseDown(event) {
+    // a click on background image should blur all elements
+    handlerBlurSelections(event) {
       if(event.target === this.$refs.bgRef) {
         this.deselectAll();
       }
     },
-    blurElements() {
+
+    handleMarqueeSelection(event) {
+      if(event.target === this.$refs.bgRef) {
+        event.preventDefault();
+        document.addEventListener('mousemove', this.handleMouseMove);
+        document.addEventListener('mouseup', this.handleMouseUp);
+        // start drawing marquee rectangle
+        this.setMarqueeStart(event.offsetX, event.offsetY);
+      }
+    },
+    handleMouseMove(event) {
+      let w = 0;
+      let h = 0;
+
+
+      //TODO: prevent inccorect marquee when mouse is covering element
+      if (event.target !== this.$refs.bgRef) {
+        return;
+      }
       
+      const x = event.offsetX;
+      const y = event.offsetY;
+      w = x - this.startCoordinates.x;
+      h = y - this.startCoordinates.y;
+
+      this.currentCoordinates.x = x;
+      this.currentCoordinates.y = y;
+    
+      // show rectangle marquee
+      this.setMarqueeRec(this.startCoordinates.x, this.startCoordinates.y ,w, h);
+
+      // if element is in the marquee
+      this.checkInsideElement();
+    },
+    handleMouseUp() {
+      document.removeEventListener('mousemove', this.handleMouseMove);
+      document.removeEventListener('mouseup', this.handleMouseUp);
+      this.resetMarqueeRec();
+    },
+    setMarqueeStart(x, y) {
+      this.startCoordinates = {x, y};
+      this.setMarqueeRec(x, y , 0, 0);
+    },
+    resetMarqueeRec() {
+      this.setMarqueeRec(0, 0, 0, 0);
+    }, 
+    setMarqueeRec(x, y, w, h) {
+      if (w < 0 && h >= 0) {
+        x = x + w;
+      } else if ( w < 0 && h < 0) {
+        x = x + w;
+        y = y + h;
+      } else if (w >= 0 && h < 0) {
+        y = y + h;
+      }
+      this.marqueeParams = {
+        left: x,
+        top: y,
+        width: Math.abs(w),
+        height: Math.abs(h)
+      }
+    },
+    checkInsideElement() {
+      this.elements.filter(elem => !elem.select).forEach(elem => {
+        if (this.examineInside(elem.position.left, elem.position.top)) {
+          this.toggleSelect(elem.id)
+        }
+      })
+    },
+    examineInside(x, y) {
+      const {left, top, width, height} = this.marqueeParams;
+      const xInside = left < x && left + width > x;
+      const yInside = top < y && top + height > y;
+      return xInside && yInside;
     }
   },
-  inject: [ 'elements', 'deselectAll' ]
+  inject: [ 'elements', 'deselectAll', 'toggleSelect']
 
 }
 
@@ -64,6 +161,7 @@ export default {
     padding: 1rem;
     height: 100vh;
     width: 100%;
+    position: relative;
   }
   /* card is global class */
   .container .card {
@@ -101,5 +199,14 @@ export default {
   }
   .descrp .close-btn:hover {
     box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  .marquee-rec {
+    position: absolute;
+    left: 100%;
+    top: 100%;
+    width: 50px;
+    height: 50px;
+    border: 1px dashed black;
+    background: transparent;
   }
 </style>

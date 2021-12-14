@@ -35,14 +35,17 @@ export default {
     }
   },
   watch: {
-    select(val) {
-      if (val) {
-        document.addEventListener('keydown', this.handleArrowKeys);
-        document.addEventListener('keydown', this.handleDeleteKeys);
-        document.addEventListener('keydown', this.handleDuplicateElem)
-      } else {
-        // stop controlling this element
-        this.removeAllEventListener();
+    select: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          document.addEventListener('keydown', this.handleArrowKeys);
+          document.addEventListener('keydown', this.handleDeleteKeys);
+          document.addEventListener('keydown', this.handleDuplicateElem)
+        } else {
+          // stop controlling this element
+          this.removeAllEventListener();
+        }
       }
     }
   },
@@ -121,12 +124,12 @@ export default {
         // copy position and rotation as well
         this.tempCopy.position = {...this.position};
         this.tempCopy.rotation = {...this.rotation};
+        this.tempCopy.select = true;
         
         this.addElement(this.tempCopy);
 
         // cancel current selection and select onto the new element
         this.toggleSelect(this.element.id)
-        this.tempCopy.select = false;
 
       }
     }
